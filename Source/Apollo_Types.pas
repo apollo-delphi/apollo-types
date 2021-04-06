@@ -2,6 +2,9 @@ unit Apollo_Types;
 
 interface
 
+uses
+  System.Classes;
+
 type
   TSimpleMethod = procedure of object;
 
@@ -10,6 +13,25 @@ type
   TSimpleMethodsHelper = record helper for TSimpleMethods
     procedure Add(aSimpleMethod: TSimpleMethod);
     procedure Exec;
+  end;
+
+  TNotifyEventItem = record
+    NotifyEvent: TNotifyEvent;
+    Sender: TObject;
+  end;
+
+  TNotifyEvents = TArray<TNotifyEventItem>;
+
+  TNotifyEventsHelper = record helper for TNotifyEvents
+    procedure Add(aSender: TObject; aNotifyEvent: TNotifyEvent);
+    procedure Exec;
+  end;
+
+  TIntefacedObjectNotUsingReference = class(TObject)
+  protected
+    function _AddRef: Integer; stdcall;
+    function _Release: Integer; stdcall;
+    function QueryInterface(const IID: TGUID; out Obj): HResult; stdcall;
   end;
 
 implementation
@@ -27,6 +49,47 @@ var
 begin
   for SimpleMethod in Self do
     SimpleMethod;
+end;
+
+{ TNotifyEventsHelper }
+
+procedure TNotifyEventsHelper.Add(aSender: TObject; aNotifyEvent: TNotifyEvent);
+var
+  Item: TNotifyEventItem;
+begin
+  Item.Sender := aSender;
+  Item.NotifyEvent := aNotifyEvent;
+
+  Self := Self + [Item];
+end;
+
+procedure TNotifyEventsHelper.Exec;
+var
+  Item: TNotifyEventItem;
+begin
+  for Item in Self do
+    Item.NotifyEvent(Item.Sender);
+end;
+
+{ TIntefacedObjectNotUsingReference }
+
+function TIntefacedObjectNotUsingReference.QueryInterface(const IID: TGUID;
+  out Obj): HResult;
+begin
+  if GetInterface(IID, Obj) then
+    Result := 0
+  else
+    Result := E_NOINTERFACE;
+end;
+
+function TIntefacedObjectNotUsingReference._AddRef: Integer;
+begin
+  Result := -1;
+end;
+
+function TIntefacedObjectNotUsingReference._Release: Integer;
+begin
+  Result := -1;
 end;
 
 end.
