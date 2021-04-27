@@ -1,1 +1,10 @@
-/Source/__history/*.~1~
+*.local
+*.identcache
+*.res
+*.stat
+*.tvsconfig
+__history
+__recovery
+BIN
+DCU
+Vendors
