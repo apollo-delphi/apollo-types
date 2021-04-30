@@ -34,6 +34,11 @@ type
     function QueryInterface(const IID: TGUID; out Obj): HResult; stdcall;
   end;
 
+  ISourceFreeNotification = interface
+  ['{087E30AF-C13E-4B9C-861F-42FFC335B747}']
+    procedure AddFreeNotify(aNotifyEvent: TNotifyEvent);
+  end;
+
 implementation
 
 {TSimpleMethodsHelper}
