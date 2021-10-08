@@ -13,6 +13,7 @@ type
   TSimpleMethodsHelper = record helper for TSimpleMethods
     procedure Add(aSimpleMethod: TSimpleMethod);
     procedure Exec;
+    procedure Remove(const aData: Pointer);
   end;
 
   TNotifyEventItem = record
@@ -54,6 +55,14 @@ var
 begin
   for SimpleMethod in Self do
     SimpleMethod;
+end;
+procedure TSimpleMethodsHelper.Remove(const aData: Pointer);
+var
+  i: Integer;
+begin
+  for i := Length(Self) - 1 downto 0 do
+    if TMethod(Self[i]).Data = aData then
+      Delete(Self, i, 1);
 end;
 
 { TNotifyEventsHelper }
