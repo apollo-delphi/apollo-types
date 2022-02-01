@@ -11,6 +11,8 @@ type
   TSimpleMethods = TArray<TSimpleMethod>;
 
   TSimpleMethodsHelper = record helper for TSimpleMethods
+    function Count: Integer;
+    function GetInstance(const aIndex: Integer): Pointer;
     procedure Add(aSimpleMethod: TSimpleMethod);
     procedure Exec;
     procedure Remove(const aData: Pointer);
@@ -49,6 +51,11 @@ begin
   Self := Self + [aSimpleMethod];
 end;
 
+function TSimpleMethodsHelper.Count: Integer;
+begin
+  Result := Length(Self);
+end;
+
 procedure TSimpleMethodsHelper.Exec;
 var
   SimpleMethod: TSimpleMethod;
@@ -56,6 +63,12 @@ begin
   for SimpleMethod in Self do
     SimpleMethod;
 end;
+
+function TSimpleMethodsHelper.GetInstance(const aIndex: Integer): Pointer;
+begin
+  Result := TMethod(Self[aIndex]).Data;
+end;
+
 procedure TSimpleMethodsHelper.Remove(const aData: Pointer);
 var
   i: Integer;
