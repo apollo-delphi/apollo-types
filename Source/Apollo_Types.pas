@@ -15,7 +15,8 @@ type
     function GetInstance(const aIndex: Integer): Pointer;
     procedure Add(aSimpleMethod: TSimpleMethod);
     procedure Exec;
-    procedure Remove(const aData: Pointer);
+    procedure Remove(const aData: Pointer); overload;
+    procedure Remove(aSimpleMethod: TSimpleMethod); overload;
   end;
 
   TNotifyEventItem = record
@@ -67,6 +68,15 @@ end;
 function TSimpleMethodsHelper.GetInstance(const aIndex: Integer): Pointer;
 begin
   Result := TMethod(Self[aIndex]).Data;
+end;
+
+procedure TSimpleMethodsHelper.Remove(aSimpleMethod: TSimpleMethod);
+var
+  i: Integer;
+begin
+  for i := Length(Self) - 1 downto 0 do
+    if TMethod(Self[i]).Data = TMethod(aSimpleMethod).Data then
+      Delete(Self, i, 1);
 end;
 
 procedure TSimpleMethodsHelper.Remove(const aData: Pointer);
